@@ -1,6 +1,6 @@
 # powerplant-challenge/app/api/v1/endpoints/production_plan.py
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from app.models.data_models import InputPayload, OutputResponse
 from app.core.merit_order_solver import calculate_production_plan
 import logging
@@ -17,6 +17,14 @@ async def post_production_plan(payload: InputPayload):
         production_list = calculate_production_plan(payload)
             
         return OutputResponse(productionplan=production_list)
+
+    except ValueError as e:
+        # Catch ValueError and translate it to the 422 HTTP status
+        logger.warning(f"Input validation error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(e)
+        )
 
     except Exception as e:
         logger.error(f"Runtime error during production plan calculation: {e}", exc_info=True)
