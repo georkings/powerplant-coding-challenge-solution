@@ -1,4 +1,4 @@
-# powerplant-challenge/app/api/v1/endpoints/production_plan.py
+# powerplant-challenge/app/routers/production_plan.py
 
 from fastapi import APIRouter, HTTPException, status
 from app.models.data_models import InputPayload, OutputResponse
