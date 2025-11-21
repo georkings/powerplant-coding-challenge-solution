@@ -39,14 +39,16 @@ def calculate_production_plan(payload: InputPayload) -> list[ProductionPlanItem]
     for plant in payload.powerplants:
         cost = calculate_mwh_cost(plant, payload.fuels)
 
+        pmax_available = plant.pmax
         if plant.type == "windturbine":
             # Available wind power
-            plant.pmax *= payload.fuels.wind_percentage / 100.0
+            pmax_available *= payload.fuels.wind_percentage / 100.0
 
-        total_max_capacity += plant.pmax
+        total_max_capacity += pmax_available
 
         merit_list.append({
             "plant": plant,
+            "pmax_available": pmax_available,
             "cost": cost,
             "production": 0.0  # Initial production
         })
@@ -71,11 +73,11 @@ def calculate_production_plan(payload: InputPayload) -> list[ProductionPlanItem]
             break
 
         p_min = plant.pmin
-        p_max = plant.pmax
+        p_pmax_available = item["pmax_available"]
 
         if load_remaining >= p_min:
             # Dispatch the plant: either fill the remaining load or run at Pmax
-            p_dispatch = min(load_remaining, p_max)
+            p_dispatch = min(load_remaining, p_pmax_available)
             item["production"] = round(p_dispatch, 1)
             load_remaining -= item["production"]
             committed_units.append(item)
