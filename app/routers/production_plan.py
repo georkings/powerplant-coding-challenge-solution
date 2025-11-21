@@ -1,7 +1,7 @@
 # powerplant-challenge/app/routers/production_plan.py
 
 from fastapi import APIRouter, HTTPException, status
-from app.models.data_models import InputPayload, OutputResponse
+from app.models.data_models import InputPayload
 from app.core.merit_order_solver import calculate_production_plan
 import logging
 
@@ -16,7 +16,7 @@ async def post_production_plan(payload: InputPayload):
         # Call the core business logic solver
         production_list = calculate_production_plan(payload)
             
-        return OutputResponse(productionplan=production_list)
+        return production_list
 
     except ValueError as e:
         # Catch ValueError and translate it to the 422 HTTP status

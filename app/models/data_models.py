@@ -30,7 +30,3 @@ class ProductionPlanItem(BaseModel):
     """Defines the production output for a single power plant."""
     name: str
     p: float = Field(ge=0) # Power produced (MWh), multiple of 0.1 MWh
-
-class OutputResponse(BaseModel):
-    """The main output structure for the /productionplan endpoint."""
-    productionplan: list[ProductionPlanItem]
