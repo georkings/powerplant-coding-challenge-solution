@@ -28,7 +28,7 @@ def calculate_production_plan(payload: InputPayload) -> list[ProductionPlanItem]
     Implements a greedy merit-order algorithm to determine power production.
     """
     load_remaining = payload.load
-    production_plan: list[ProductionPlanItem] = []
+    production_plan = []
     total_max_capacity = 0
     
     # 1. Calculate MWh Costs for each Plant
@@ -133,13 +133,10 @@ def calculate_production_plan(payload: InputPayload) -> list[ProductionPlanItem]
 
     # 5. Compile Final Production Plan
 
-    # Compile the results, including the zero-production plants
-    final_plan: list[ProductionPlanItem] = production_plan
-
     for item in merit_list:
-        final_plan.append(ProductionPlanItem(
+        production_plan.append(ProductionPlanItem(
             name=item["plant"].name, 
             p=item["production"]
         ))
 
-    return final_plan
+    return production_plan
